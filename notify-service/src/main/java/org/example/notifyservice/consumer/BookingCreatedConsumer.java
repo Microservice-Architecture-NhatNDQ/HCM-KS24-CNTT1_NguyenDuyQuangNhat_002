@@ -16,7 +16,8 @@ public class BookingCreatedConsumer {
         this.emailService = emailService;
     }
 
+    @KafkaListener(topics = "${notification.kafka.booking-created-topic:booking-created}", groupId = "${spring.kafka.consumer.group-id:notify-service}")
     public void consume(String email) {
-        throw new UnsupportedOperationException();
+        emailService.sendBookingCreatedEmail(email);
     }
 }

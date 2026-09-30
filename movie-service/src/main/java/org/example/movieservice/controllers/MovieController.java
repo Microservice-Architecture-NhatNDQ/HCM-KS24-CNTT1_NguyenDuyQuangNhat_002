@@ -21,7 +21,6 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    @Cacheable(cacheNames = "movies", key = "#id")
     public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
         Movie result = movieService.getMovieById(id);
         if (result == null) {
