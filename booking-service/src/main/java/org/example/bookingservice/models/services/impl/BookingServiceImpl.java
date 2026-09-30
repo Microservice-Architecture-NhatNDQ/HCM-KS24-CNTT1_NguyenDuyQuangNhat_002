@@ -1,6 +1,7 @@
 package org.example.bookingservice.models.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.bookingservice.exceptions.MovieServiceException;
 import org.example.bookingservice.models.constants.BookingStatus;
 import org.example.bookingservice.models.dto.requests.CreateBookingDetailRequest;
 import org.example.bookingservice.models.dto.requests.CreateBookingRequest;
@@ -30,6 +31,16 @@ public class BookingServiceImpl implements BookingService {
         @Override
         @Transactional
         public BookingResponse createBooking(CreateBookingRequest request) {
+                List<BookingDetailResponse> detailResponses = new ArrayList<>();
+
+                request.items().forEach(item -> {
+                        double lineTotal = 0.0;
+                        MovieResponse movie = movieGatewayService.getMovieById(item.movieId());
+                        Double price = movie.ticketPrice();
+                        BookingDetailResponse response = new BookingDetailResponse(0, item.movieId(), movie.title(), item.quantity(), price * item.quantity(), price * item.quantity());
+                        detailResponses.add(response);
+                });
+
                 throw new UnsupportedOperationException();
         }
 }

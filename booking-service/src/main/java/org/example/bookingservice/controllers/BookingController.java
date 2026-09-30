@@ -2,6 +2,7 @@ package org.example.bookingservice.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.bookingservice.exceptions.MovieServiceException;
 import org.example.bookingservice.models.dto.requests.CreateBookingRequest;
 import org.example.bookingservice.models.dto.responses.BookingResponse;
 import org.example.bookingservice.models.services.BookingService;
@@ -21,6 +22,10 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody CreateBookingRequest request) {
+        if (request == null) {
+            throw new MovieServiceException("Tham số đầu vào không hợp lệ");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.createBooking(request));
     }
 }

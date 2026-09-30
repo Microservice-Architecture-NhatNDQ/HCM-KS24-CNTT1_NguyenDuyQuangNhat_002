@@ -1,7 +1,9 @@
 package org.example.movieservice.controllers;
 
+import org.example.movieservice.exceptions.MovieNotFoundException;
 import org.example.movieservice.models.entities.Movie;
 import org.example.movieservice.models.services.MovieService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +21,13 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
+    @Cacheable(cacheNames = "movies", key = "#id")
     public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
-        return ResponseEntity.ok(movieService.getMovieById(id));
+        Movie result = movieService.getMovieById(id);
+        if (result == null) {
+            throw new MovieNotFoundException(id);
+        }
+
+        return ResponseEntity.ok(result);
     }
 }

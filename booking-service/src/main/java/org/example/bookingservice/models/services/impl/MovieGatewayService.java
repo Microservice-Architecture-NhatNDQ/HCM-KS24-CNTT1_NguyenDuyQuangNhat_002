@@ -16,7 +16,11 @@ public class MovieGatewayService {
     private final MovieClient movieClient;
 
     public MovieResponse getMovieById(Long movieId) {
-        throw new UnsupportedOperationException();
+        MovieResponse response = movieClient.getMovieById(movieId);
+        if (response == null) {
+            throw new MovieNotFoundException(movieId);
+        }
+        return response;
     }
 
 }
